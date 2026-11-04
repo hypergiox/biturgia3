@@ -313,6 +313,35 @@ html:not(.pix) #menuList .mi.sel{font-size:clamp(24px,4.4vh,38px);color:#fff;let
   text-shadow:0 0 12px rgba(255,220,120,.8),0 3px 0 rgba(0,0,0,.7);box-shadow:0 -1px 0 rgba(255,210,58,.7) inset,0 1px 0 rgba(255,210,58,.7) inset}
 html:not(.pix) #menuList .mi.sel small{display:block;font-size:14px;letter-spacing:.04em;color:#ffe8b0;text-shadow:none;margin-top:2px}
 html:not(.pix) #menu .note{text-align:center!important;margin-top:auto}
+
+/* feedback */
+.fbox{width:min(640px,100%);display:flex;flex-direction:column;gap:10px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips label{background:var(--stone);border:2px solid var(--line);border-radius:2px;padding:5px 12px;font-size:16px;cursor:pointer;display:flex;gap:6px;align-items:center;font-weight:700}
+.chips label:has(input:checked){border-color:var(--gold);color:var(--gold)}
+.chips input{accent-color:var(--blood);margin:0}
+.flab{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:-6px}
+#feedText{width:100%;background:var(--stone);border:2px solid var(--line);border-radius:2px;color:var(--paper);font:500 17px/1.35 var(--body);padding:8px 10px;resize:vertical;min-height:120px;user-select:text;-webkit-user-select:text}
+.finfo{font-size:14px;color:var(--muted)}.finfo summary{cursor:pointer}
+.finfo pre,#flList pre{white-space:pre-wrap;word-break:break-word;background:var(--stone);border:1px solid var(--line);padding:8px;font-size:12px;max-height:200px;overflow:auto;margin:6px 0 0}
+#feedMsg{margin:0;min-height:1.2em;text-align:center;font-size:15px}#feedMsg.ok{color:#7bd389}#feedMsg.err{color:#ff8a7a}
+#flList{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px;max-height:60vh;overflow:auto}
+#flList li{background:var(--stone2);border:1px solid var(--line);padding:10px 14px;display:flex;flex-direction:column;gap:4px}
+#flList .cat{font-weight:800;color:var(--gold);text-transform:uppercase;letter-spacing:.1em;font-size:12px}#flList .meta{font-size:13px;color:var(--muted)}
+#flList p{margin:0;font-size:16px;white-space:pre-wrap;word-break:break-word}
+
+/* apertura: il logo dello studio */
+#studio{position:fixed;inset:0;z-index:80;background:#070504;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:opacity .45s}
+#studio::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 42%,rgba(232,182,74,.18),rgba(232,182,74,0) 60%);pointer-events:none}
+#studio.out{opacity:0}
+.slogo{display:flex;flex-direction:column;align-items:center;opacity:0;transform:translateY(20px);transition:opacity .6s,transform .8s cubic-bezier(.2,.8,.3,1)}
+#studio.in .slogo{opacity:1;transform:none}
+#studioImg{width:min(86vw,calc(62vh * 220 / 130));image-rendering:pixelated;height:auto}
+.spres{margin:1.2vh 0 0;font-family:var(--body);font-style:italic;font-weight:600;font-size:clamp(16px,3.2vh,26px);color:#a8988a;opacity:0;transition:opacity .8s .3s}
+#studio.go .spres{opacity:1}
+.stap{position:absolute;bottom:9vh;margin:0;font-weight:700;font-size:clamp(15px,3vh,22px);color:#efe3cf;animation:sblink 1.6s ease-in-out infinite}
+#studio.go .stap{display:none}
+@keyframes sblink{50%{opacity:.25}}
 </style>
 </head>
 <body>
@@ -339,6 +368,10 @@ html:not(.pix) #menu .note{text-align:center!important;margin-top:auto}
   <button type="button" id="tPause" aria-label="Pausa">II</button>
 </div>
 
+<div id="studio" hidden>
+  <div class="slogo"><img id="studioImg" alt="10inch feet games" src="data:image/png;base64,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"><p class="spres">presenta</p></div>
+  <p class="stap" id="studioTap">Clicca o premi un tasto per iniziare</p>
+</div>
 <section class="scr" id="boot"><p>Biturgia 3</p><p class="note">Preparo i lottatori…</p></section>
 
 <section class="scr" id="title" hidden>
@@ -387,6 +420,29 @@ html:not(.pix) #menu .note{text-align:center!important;margin-top:auto}
   </div>
   <p class="note"><kbd>←</kbd><kbd>→</kbd> cambia personaggio · sul gamepad i tasti sono gli stessi di Tekken 3: □ △ ✕ ○ · Avvio = fotogrammi prima che il colpo arrivi</p>
   <button type="button" class="ghost" id="mvBack">Indietro</button>
+</section>
+
+<section class="scr solid" id="feed" hidden>
+  <form class="fbox" id="feedForm">
+    <h2 class="hd">Feedback</h2>
+    <p class="note">Un bug, un personaggio troppo forte, un'idea? Scrivilo qui: arriva a chi fa il gioco.</p>
+    <div class="chips" role="radiogroup" aria-label="Di cosa si tratta">
+      <label><input type="radio" name="fcat" value="bug" checked> Bug</label>
+      <label><input type="radio" name="fcat" value="bilanciamento"> Troppo forte o debole</label>
+      <label><input type="radio" name="fcat" value="idea"> Idea</label>
+      <label><input type="radio" name="fcat" value="altro"> Altro</label>
+    </div>
+    <label class="flab" for="feedText">Il tuo messaggio</label>
+    <textarea id="feedText" maxlength="1000" rows="6" placeholder="Cosa è successo, in quale modalità, con quale personaggio…"></textarea>
+    <p class="note" id="feedLeft">1000 caratteri</p>
+    <details class="finfo"><summary>Informazioni allegate in automatico</summary><pre id="feedInfo"></pre></details>
+    <p id="feedMsg" role="status"></p>
+    <div class="row"><button type="button" class="ghost" id="feedBack">Indietro</button><button type="submit" class="big" id="feedSend">Invia</button></div>
+    <button type="button" class="ghost" id="feedRead" hidden>Leggi i feedback ricevuti</button>
+  </form>
+</section>
+<section class="scr solid" id="feedlist" hidden>
+  <div class="fbox"><h2 class="hd">Feedback ricevuti</h2><p class="note" id="flCount"></p><ul id="flList"></ul><div class="row"><button type="button" class="ghost" id="flBack">Indietro</button></div></div>
 </section>
 
 <section class="scr" id="result" hidden>
@@ -1732,7 +1788,7 @@ function moveKeys(m, base) {
 /* ================= BASE: opzioni, salvataggi, comandi, audio ================= */
 'use strict';
 const $ = id => document.getElementById(id);
-const VERSION = '2.2';
+const VERSION = '2.4';
 function store(key, val) {
   try {
     if (val === undefined) { const s = localStorage.getItem(key); return s ? JSON.parse(s) : null; }
@@ -1751,11 +1807,17 @@ const KEYS = [
   {ArrowUp: B.U, ArrowDown: B.D, ArrowLeft: B.L, ArrowRight: B.R, Numpad4: B.LP, Numpad5: B.RP, Numpad1: B.LK, Numpad2: B.RK, Numpad6: B.SP, Numpad0: B.SP, NumpadEnter: B.ST,
     Period: B.LP, Slash: B.RP, Semicolon: B.LK, Quote: B.RK, ShiftRight: B.SP, Numpad7: B.LP | B.LK, Numpad8: B.RP | B.RK},
 ];
+// feedback: per la copia su GitHub build.sh scrive qui il progetto Firebase (file firebase.config); vuoto = i messaggi restano sul dispositivo
+const FIREBASE = {projectId: 'biturgia3', apiKey: 'AIzaSyDwUXf6H24lSDSHc44qdTGbpH6UxGI7FJ0'};
+// gli ultimi errori del gioco viaggiano insieme al feedback, così i bug si ritrovano
+const ERRS = [];
+window.addEventListener('error', e => { ERRS.push((e.message || 'errore') + (e.lineno ? ' @' + e.lineno + ':' + e.colno : '')); if (ERRS.length > 6) ERRS.shift(); });
+window.addEventListener('unhandledrejection', e => { ERRS.push('promise: ' + String(e.reason && e.reason.message || e.reason)); if (ERRS.length > 6) ERRS.shift(); });
 const Input = {
   down: new Set(), touch: 0, padPrev: [0, 0, 0, 0], menuHandler: null, repeatT: {},
   init() {
     window.addEventListener('keydown', e => {
-      if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) { if (e.code === 'Escape' || e.code === 'Enter') this.menuKey(e); return; }
+      if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) { if (e.code === 'Escape' || (e.code === 'Enter' && e.target.tagName === 'INPUT')) this.menuKey(e); return; } // nei campi di testo si scrive e basta
       if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space'].includes(e.code)) e.preventDefault();
       if (!e.repeat) this.down.add(e.code);
       Audio2.unlock();
@@ -2452,6 +2514,27 @@ const SCULPT = {
     },
   },
 };
+// tutti gli altri: stessa scultura del viso di Vina, con le proporzioni di ognuno
+// [mascella, arcate, naso, guance scavate (+) o piene (-), mento]
+const FACE_TYPE = {
+  davidone: [1.5, 1.6, 1.2, 0.3, 1.4], piero: [1.35, 1.3, 1.05, 0.8, 1.3], capa: [0.9, 1.0, 1.5, -0.8, 0.9], pierodf: [1.0, 1.3, 1.25, 1.6, 1.1],
+  manfro: [1.25, 1.35, 1.0, 1.0, 1.2], gumi: [0.9, 0.9, 0.9, 0.6, 0.9], raspo: [1.1, 1.1, 1.1, 0.7, 1.0], pake: [1.1, 1.0, 1.0, 0.9, 1.15],
+  pinciu: [1.0, 1.0, 1.1, 0.6, 1.0], faif: [1.05, 1.0, 1.05, 0.7, 1.05], alex: [0.95, 0.9, 1.0, 0.7, 0.95], maiga: [0.95, 1.0, 1.05, 0.5, 0.95],
+  gabbo: [0.95, 1.0, 1.15, 0.9, 1.05], ghera: [1.0, 1.1, 1.05, 0.6, 1.0],
+};
+function sculptFor(id) {
+  if (SCULPT[id]) return SCULPT[id];
+  const t = FACE_TYPE[id]; if (!t) return null;
+  const [j, b, n, h, c] = t;
+  return SCULPT['_' + id] || (SCULPT['_' + id] = {fem: 0, look: {contour: 1}, face: [
+    [0.31, 0.16, -0.03, 0.11, 0.06], [-0.31, 0.16, -0.03, 0.11, 0.06],
+    [0.3, 0.32, 0.04 * b, 0.18, 0.045], [-0.3, 0.32, 0.04 * b, 0.18, 0.045], [0, 0.3, 0.022 * b, 0.1, 0.05],
+    [0, 0.08, 0.055 * n, 0.05 * n, 0.14], [0, -0.13, 0.12 * n, 0.06 * n, 0.06], [0.09, -0.18, 0.04 * n, 0.045, 0.03], [-0.09, -0.18, 0.04 * n, 0.045, 0.03],
+    [0.5, 0.0, 0.05, 0.1, 0.08], [-0.5, 0.0, 0.05, 0.1, 0.08], [0.4, -0.3, -0.035 * h, 0.1, 0.1], [-0.4, -0.3, -0.035 * h, 0.1, 0.1],
+    [0, -0.37, 0.022, 0.12, 0.03], [0, -0.48, 0.025, 0.1, 0.03], [0, -0.42, -0.025, 0.16, 0.012],
+    [0, -0.72, 0.06 * c, 0.15, 0.08], [0.42, -0.58, 0.045 * j, 0.08, 0.08], [-0.42, -0.58, 0.045 * j, 0.08, 0.08],
+  ]});
+}
 const GFX = {
   ready: false, models: [], fx: [], pjMeshes: new Map(), shake: 0, camMode: 'fight', camT: 0, superCam: null, flash: 0,
   init(host) {
@@ -2827,7 +2910,7 @@ const GFX = {
   },
   sculptG(id) { // testa scolpita: sfera fitta, ovale del viso, poi rilievi e incavi
     const key = '_sc_' + id; if (this[key]) return this[key];
-    const SC = SCULPT[id], fem = SC.fem, g = new THREE.SphereGeometry(1, 56, 44), pos = g.attributes.position, v = new THREE.Vector3();
+    const SC = sculptFor(id), fem = SC.fem, g = new THREE.SphereGeometry(1, 56, 44), pos = g.attributes.position, v = new THREE.Vector3();
     for (let i = 0; i < pos.count; i++) {
       v.fromBufferAttribute(pos, i);
       const low = Math.max(0, -v.y), front = Math.max(0, v.z);
@@ -2842,6 +2925,7 @@ const GFX = {
     }
     g.computeVertexNormals(); this[key] = g; return g;
   },
+  lighten(c) { const v = parseInt(c.slice(1), 16), f = x => Math.min(255, Math.round(x * 1.7 + 40)); return '#' + [v >> 16, (v >> 8) & 255, v & 255].map(f).map(x => x.toString(16).padStart(2, '0')).join(''); },
   hairTex(col, hi) { // ciocche: fili chiari e scuri lungo la lunghezza, riflesso in alto
     const cv = document.createElement('canvas'); cv.width = 64; cv.height = 256; const x = cv.getContext('2d');
     x.fillStyle = col; x.fillRect(0, 0, 64, 256);
@@ -2881,8 +2965,8 @@ const GFX = {
   /* ---------- il lottatore: modello arrotondato, ombreggiatura morbida, luce speculare ---------- */
   build(id, cos) {
     const C = CH[id], L = Object.assign({}, C.look, cos ? C.alt : {});
-    const skin = this.P(L.skin, L.robot ? 90 : 26), hairM = this.P(L.hair, L.hstyle === 'slick' ? 110 : 45);
-    { const SL = !L.robot && !PIX.on() && SCULPT[id]; if (SL && SL.look) Object.assign(L, SL.look); }
+    const skin = this.P(L.skin, L.robot ? 90 : 26), hairM = PIX.on() || L.robot ? this.P(L.hair, L.hstyle === 'slick' ? 110 : 45) : new THREE.MeshLambertMaterial({color: 0xffffff, map: this.hairTex(L.hair, this.lighten(L.hair))});
+    { const SL = !L.robot && !PIX.on() && sculptFor(id); if (SL && SL.look) Object.assign(L, SL.look); }
     const longSleeve = L.suit || L.robot || L.robe || L.jacket || id === 'maiga' || id === 'gabbo';
     L.accent = (GEAR[id] || {}).accent;
     const torsoM = this.P('#ffffff', L.robot ? 95 : L.shirtless ? 26 : 14, {map: this.torsoTex(L)});
@@ -2980,7 +3064,7 @@ const GFX = {
     if (L.robe) { const sc = new THREE.Mesh(new THREE.TorusGeometry(0.15, 0.035, 6, 16), this.P(L.shirt2, 60)); sc.rotation.x = Math.PI / 2; sc.scale.y = 0.75; sc.position.y = 0.22; ch.add(sc); }
     const headM = this.P('#ffffff', L.robot ? 90 : 22, {map: this.faceTex(C, L)});
     if (L.robot) headM.specular = new THREE.Color(0x888888);
-    const SC = !L.robot && !PIX.on() && SCULPT[id];
+    const SC = !L.robot && !PIX.on() && sculptFor(id);
     const head = new THREE.Mesh(L.robot ? new THREE.SphereGeometry(1, 24, 18) : SC ? this.sculptG(id) : this.headG(L.female), headM); head.scale.set(L.robot ? 0.103 : 0.1, L.robot ? 0.125 : 0.132, 0.115); head.position.set(0, 0.148, 0.005); head.castShadow = true; hd.add(head);
     if (!L.robot) {
       if (!SC) { const nose = new THREE.Mesh(new THREE.ConeGeometry(0.013, 0.034, 6), skin); nose.position.set(0, 0.138, 0.113); nose.rotation.x = 0.5; hd.add(nose); }
@@ -4141,7 +4225,8 @@ const UI = {
       {label: 'Allenamento', sub: 'Prova mosse e combo', fn: () => this.select({mode: 'practice'})},
       {label: 'Lista mosse', sub: 'Tutti i comandi di ogni personaggio', fn: () => this.moves(null, () => this.main(8))},
       {label: 'Galleria', sub: 'I finali che hai sbloccato', fn: () => this.gallery()},
-      {label: 'Opzioni', sub: 'Difficoltà, round, audio, filtro video, comandi', fn: () => this.options()},
+      {label: 'Feedback', sub: 'Segnala un bug o proponi un\'idea a chi fa il gioco', fn: () => Feedback.open(() => this.main(10))},
+      {label: 'Opzioni', sub: 'Difficoltà, round, audio, comandi', fn: () => this.options()},
     ];
     this.list($('menuList'), items, () => this.title(), keep);
   },
@@ -4346,7 +4431,7 @@ const UI = {
       {label: 'Effetti', value: () => Math.round(OPT.sfx * 10), change: d => { OPT.sfx = Math.max(0, Math.min(1, Math.round((OPT.sfx + d * 0.1) * 10) / 10)); saveOpt(); Audio2.vol(); Audio2.sfx('hitM'); }},
       {label: 'Comandi', sub: 'Tastiera, gamepad e touch', fn: () => this.controls()},
     ];
-    this.list($('optList'), items, () => this.main(10));
+    this.list($('optList'), items, () => this.main(11));
   },
   controls() {
     this.show('ctrls');
@@ -4396,6 +4481,7 @@ const Game = {
   begin(cfg) {
     if (!cfg.demo) Attract.on = false;
     this.cfg = cfg;
+    if (!cfg.demo) this.lastInfo = (cfg.tag || '') + ' · ' + cfg.p.map(p => CH[p.ch] ? CH[p.ch].name : p.ch).join(' contro ') + ' · ' + (ST[cfg.stage] ? ST[cfg.stage].name : cfg.stage);
     const simCfg = {p: cfg.p, need: cfg.need || 2, timer: cfg.timer, noIntro: cfg.noIntro, skippable: !cfg.net, practice: cfg.practice, seed: cfg.seed || Math.floor(Math.random() * 1e9), infMeter: cfg.infMeter,
       classic: cfg.classic != null ? !!cfg.classic : OPT.rules !== 'biturgia'};
     document.documentElement.classList.toggle('classic', !!simCfg.classic && !cfg.demo);
@@ -4577,6 +4663,7 @@ const Pause = {
       if (!G.S.cfg.classic) items.push({label: 'Furia infinita', value: () => G.S.cfg.infMeter ? 'Sì' : 'No', change: () => { G.S.cfg.infMeter = !G.S.cfg.infMeter; }});
       items.push({label: 'Riposiziona', fn: () => { Sim.place(G.S); for (const f of G.S.f) f.hp = f.max; GFX.snapCamera(G.S); this.close(); }});
     }
+    items.push({label: 'Segnala', fn: () => Feedback.open(() => this.open())});
     items.push({label: 'Ricomincia', fn: () => { const c = G.cfg; G.end(); UI.hideAll(); Game.begin(c); }});
     items.push({label: 'Esci al menu', fn: () => { G.end(); Modes.quit(); }});
     UI.list($('pauseList'), items, () => this.close());
@@ -4792,6 +4879,33 @@ const Online = {
   hover(id) { clearTimeout(this.ht); this.ht = setTimeout(() => Net.set(Net.role + '/hover', id), 120); },
 };
 
+/* ---------- apertura: "10inch feet games presenta" ----------
+   il logo aspetta il primo tocco (che sblocca anche l'audio), poi suona, compare "presenta" e si passa al titolo; un altro tocco salta */
+const Studio = {
+  on: false,
+  play(done) {
+    const el = $('studio'); this.on = true; this.go = false; this.done = done;
+    if (matchMedia('(pointer:coarse)').matches) $('studioTap').textContent = 'Tocca per iniziare';
+    el.hidden = false; el.className = ''; requestAnimationFrame(() => el.classList.add('in'));
+    const tap = e => { if (!this.on) return; if (e) { e.preventDefault(); e.stopImmediatePropagation(); } this.tap(); };
+    this.kh = tap; window.addEventListener('keydown', tap, true); el.onpointerdown = tap;
+  },
+  tap() {
+    if (!this.go) {
+      this.go = true; Audio2.unlock(); $('studio').classList.add('go');
+      setTimeout(() => { if (this.on) [784, 988, 1175, 1568].forEach((f, i) => Audio2.tone(f, 0.8, 'triangle', 0.05, null, i * 0.12)); }, 350);
+      this.t = setTimeout(() => this.end(), 3000); return;
+    }
+    this.end();
+  },
+  end() {
+    if (!this.on) return; this.on = false; clearTimeout(this.t);
+    window.removeEventListener('keydown', this.kh, true);
+    const el = $('studio'); el.classList.add('out'); setTimeout(() => { el.hidden = true; }, 460);
+    this.done();
+  },
+};
+
 /* ---------- avvio ---------- */
 function boot() {
   Input.init(); Touch.init(); Voice.init();
@@ -4800,7 +4914,7 @@ function boot() {
   setTimeout(() => {
     UI.portraits = GFX.portraits();
     $('boot').hidden = true;
-    UI.title();
+    Studio.play(() => UI.title());
     requestAnimationFrame(t => Game.loop(t));
   }, 30);
   document.addEventListener('visibilitychange', () => { if (document.hidden && Game.run && !Game.cfg.demo && !Game.cfg.net && !Game.paused) Pause.open(); });
@@ -4813,6 +4927,77 @@ function boot() {
   $('tPause').addEventListener('click', esc);
 }
 window.addEventListener('load', boot);
+
+/* ---------- feedback: un modulo nel gioco; con Firebase arriva a chi fa il gioco, senza resta sul dispositivo ---------- */
+const Feedback = {
+  on() { return !!(FIREBASE.projectId && FIREBASE.apiKey); },
+  url(p) { return `https://firestore.googleapis.com/v1/projects/${FIREBASE.projectId}/databases/(default)/documents/${p}?key=${FIREBASE.apiKey}`; },
+  info() {
+    const l = ['Versione: ' + VERSION, 'Browser: ' + navigator.userAgent.slice(0, 160), 'Schermo: ' + innerWidth + '×' + innerHeight + (matchMedia('(pointer:coarse)').matches ? ' (touch)' : '')];
+    if (Game.lastInfo) l.push('Ultimo incontro: ' + Game.lastInfo);
+    l.push('Opzioni: difficoltà ' + OPT.diff + ', round ' + OPT.need + ', tempo ' + (OPT.timer || '∞'));
+    if (ERRS.length) l.push('Errori recenti: ' + ERRS.join(' | '));
+    return l.join('\n');
+  },
+  fields(o) { const f = {}; for (const k in o) f[k] = typeof o[k] === 'number' ? {integerValue: String(Math.round(o[k]))} : {stringValue: String(o[k])}; return f; },
+  async send(rec) {
+    if (!this.on()) return false;
+    try { const r = await fetch(this.url('b3_feedback'), {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({fields: this.fields(rec)})}); return r.ok; }
+    catch (e) { return false; }
+  },
+  async flush() { // i messaggi rimasti in coda senza rete partono appena possibile
+    const q = store('b3-fb-queue') || []; if (!q.length || !this.on()) return;
+    const left = []; for (const r of q) if (!(await this.send(r))) left.push(r);
+    store('b3-fb-queue', left);
+  },
+  open(back) {
+    this.back = back; UI.show('feed');
+    const t = $('feedText'), msg = $('feedMsg'), left = () => { const n = 1000 - t.value.length; $('feedLeft').textContent = n + (n === 1 ? ' carattere' : ' caratteri'); };
+    t.value = store('b3-fb-draft') || ''; left();
+    t.oninput = () => { left(); store('b3-fb-draft', t.value); };
+    $('feedInfo').textContent = this.info();
+    msg.textContent = this.on() ? '' : 'In questa versione i messaggi restano salvati su questo dispositivo.'; msg.className = '';
+    $('feedSend').disabled = false;
+    $('feedRead').hidden = !(this.on() && location.hash.includes('feedback'));
+    const close = () => { Audio2.sfx('back'); t.blur(); this.back(); };
+    $('feedBack').onclick = close; $('feedRead').onclick = () => this.list();
+    Input.menuHandler = a => { if (a === 'back') close(); };
+    $('feedForm').onsubmit = async e => {
+      e.preventDefault();
+      const text = t.value.trim();
+      if (text.length < 3) { msg.className = 'err'; msg.textContent = 'Scrivi almeno qualche parola.'; return; }
+      const rec = {name: (OPT.name || 'Ospite').slice(0, 16), cat: (document.querySelector('input[name=fcat]:checked') || {}).value || 'altro', text: text.slice(0, 1000), info: this.info().slice(0, 4000), v: VERSION, d: Date.now()};
+      const mine = store('b3-fb-mine') || []; mine.unshift(rec); store('b3-fb-mine', mine.slice(0, 50));
+      $('feedSend').disabled = true;
+      const ok = await this.send(rec);
+      if (!ok && this.on()) { const q = store('b3-fb-queue') || []; q.push(rec); store('b3-fb-queue', q.slice(-20)); }
+      store('b3-fb-draft', ''); t.value = ''; left();
+      msg.className = 'ok';
+      msg.textContent = ok ? 'Grazie! Il messaggio è arrivato.' : this.on() ? 'Grazie! Ora non c\'è rete: lo invio appena torni online.' : 'Grazie! Il messaggio è salvato su questo dispositivo.';
+      Audio2.sfx('ok');
+      setTimeout(() => { if (UI.cur === 'feed') this.back(); }, 1600);
+    };
+    setTimeout(() => t.focus({preventScroll: true}), 60);
+    this.flush();
+  },
+  async list() { // solo per chi fa il gioco: apri la pagina con #feedback nell'indirizzo
+    UI.show('feedlist'); const ul = $('flList'); ul.innerHTML = ''; $('flCount').textContent = 'Carico…';
+    $('flBack').onclick = () => this.open(this.back);
+    Input.menuHandler = a => { if (a === 'back') this.open(this.back); };
+    try {
+      const r = await fetch(this.url('b3_feedback') + '&pageSize=300'); const j = await r.json();
+      const v = f => f ? (f.stringValue != null ? f.stringValue : f.integerValue != null ? +f.integerValue : '') : '';
+      const docs = (j.documents || []).map(d => ({name: v(d.fields.name), cat: v(d.fields.cat), text: v(d.fields.text), info: v(d.fields.info), v: v(d.fields.v), d: +v(d.fields.d) || 0})).sort((a, b) => b.d - a.d);
+      $('flCount').textContent = docs.length + (docs.length === 1 ? ' messaggio' : ' messaggi');
+      for (const m of docs) {
+        const li = document.createElement('li');
+        li.innerHTML = `<span class="cat"></span><span class="meta"></span><p></p><details><summary>Dettagli</summary><pre></pre></details>`;
+        li.querySelector('.cat').textContent = m.cat; li.querySelector('.meta').textContent = `${m.name} · ${m.d ? new Date(m.d).toLocaleString('it-IT') : ''} · v${m.v}`;
+        li.querySelector('p').textContent = m.text; li.querySelector('pre').textContent = m.info; ul.appendChild(li);
+      }
+    } catch (e) { $('flCount').textContent = 'Non riesco a leggere i feedback (rete o regole di Firestore).'; }
+  },
+};
 
 </script>
 
